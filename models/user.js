@@ -1,9 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
-// const sequelize = new Sequelize();
-const config = require('../config/config')['development'];
-const sequelize = new Sequelize(`${config.url}`, config);
+const { DataTypes } = require('sequelize');
+const db = require('./base');
 
-const User = sequelize.define('User', {
+const User = db.define('User', {
   // Model attributes are defined here
   firstName: {
     type: DataTypes.STRING,
@@ -11,7 +9,6 @@ const User = sequelize.define('User', {
   },
   lastName: {
     type: DataTypes.STRING
-    // allowNull defaults to true
   },
   email: {
     type: DataTypes.STRING,
@@ -27,6 +24,6 @@ const User = sequelize.define('User', {
 });
 
 (async () => {
-  await sequelize.sync();
+  await db.sync();
 })();
 module.exports = User;
