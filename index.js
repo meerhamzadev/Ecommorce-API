@@ -7,7 +7,7 @@ const buyerRoutes = require('./routes/buyerRoutes')
 
 app.use(express.json())
 
-app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/seller', productRoutes);
 app.use('/api/v1/buyer', buyerRoutes);
 
