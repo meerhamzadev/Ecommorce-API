@@ -1,4 +1,5 @@
 const product = require('../models/product');
+const category = require('../models/category');
 
 const addProduct = async (req, res) => {
   try {
@@ -26,13 +27,14 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const productId = req.params.id;
   const { productName, description,
-    price, qtyStock, productImage } = req.body;
+    price, qtyStock, productImage, categoryID } = req.body;
   const updatedData = {
     productName,
     description,
     price,
     qtyStock,
-    productImage
+    productImage,
+    categoryID
   }
 
   try {
@@ -86,7 +88,13 @@ const deleteProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    let products = await product.findAll()
+    let products = await product.findAll({
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      include: {
+        model: category,
+        attributes: { exclude: ["createdAt", "updatedAt", "id"] },
+      }
+    })
     products = products.filter(({ dataValues }) => dataValues === dataValues)
 
     res.status(200).json({

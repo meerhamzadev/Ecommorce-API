@@ -1,12 +1,10 @@
 const { DataTypes } = require('sequelize')
 const db = require('./base')
-const product = require('./product');
 
 const category = db.define('Category', {
-  categoryID: {
-    type: DataTypes.STRING,
+  id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    autoIncrement: true,
     primaryKey: true
   },
   categoryName: {
@@ -15,12 +13,10 @@ const category = db.define('Category', {
   }
 }, {
 
-})
+});
 
-category.hasOne(product)
-
-  (async () => {
-    await db.sync();
-  })();
+(async () => {
+  await db.sync()
+})();
 
 module.exports = category;

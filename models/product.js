@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const db = require('./base')
+const category = require('./category');
 
 const product = db.define('Product', {
   productId: {
@@ -29,6 +30,13 @@ const product = db.define('Product', {
   }
 }, {
 
+});
+
+product.belongsTo(category, {
+  foreignKey: 'categoryID'
+});
+category.hasOne(product, {
+  foreignKey: 'categoryID'
 });
 
 (async () => {
