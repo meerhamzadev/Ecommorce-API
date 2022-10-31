@@ -8,7 +8,6 @@ const addCartItem = async (req, res) => {
     const addedItem = await cart.create({
       userId, productId, noOfItems
     })
-    console.log(addedItem);
 
     res.status(200).json({
       message: 'Item added successfully into the cart'
@@ -84,7 +83,7 @@ const showCart = async (req, res) => {
     })
 
     if (!cartItems.length) {
-      return res.status(204).json({
+      return res.status(404).json({
         message: 'Cart is empty'
       })
     }
