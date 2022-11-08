@@ -1,4 +1,6 @@
 const cart = require('../models/cart');
+const user = require('../models/user');
+const product = require('../models/product');
 
 const addCartItem = async (req, res) => {
   const { productId, noOfItems } = req.body;
@@ -74,6 +76,55 @@ const deleteCartItem = async (req, res) => {
 
 }
 
+const checkoutCartItems = async (req, res) => {
+  const id = req.params.id;
+  let totalAmount = 0;
+
+  try {
+    let cartItems = cart.findAll({
+      where: { userId: id },
+      attributes: { exclude: ["createdAt", "updatedAt", "cartId", "userId"] },
+    });
+    let cartUser = user.findOne({
+      where: { id },
+      attributes: { exclude: ["createdAt", "updatedAt", "id", "user_password"] }
+    });
+
+    [cartItems, cartUser] = await Promise.all([cartItems, cartUser]);
+
+    for (let i = 0; i < cartItems.length; i++) {
+      const item = cartItems[i];
+      const productItem = await product.findOne({
+        where: { productId: item.productId },
+        attributes: { exclude: ["createdAt", "updatedAt", "productId", "qtyStock", "categoryID"] }
+      });
+      productItem.dataValues.amount = productItem.price * item.noOfItems;
+      item.dataValues = {
+        ...item.dataValues,
+        productDetails: productItem
+      };
+      totalAmount = totalAmount + productItem.dataValues.amount;
+    }
+
+    let cartDetails = {
+      user: cartUser,
+      cartItems,
+      totalAmount
+    };
+
+    res.status(200).json({
+      orderSummary: cartDetails,
+      message: 'Summary of the order'
+    })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Internal Server Error'
+    })
+  }
+}
+
 const showCart = async (req, res) => {
   const userId = req.params.id;
 
@@ -105,5 +156,6 @@ module.exports = {
   addCartItem,
   deleteCartItem,
   updateCartItem,
-  showCart
+  showCart,
+  checkoutCartItems
 };
