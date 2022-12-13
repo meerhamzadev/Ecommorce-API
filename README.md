@@ -15,6 +15,8 @@ A full-fledged API for e-commerce operations written following MVC pattern and A
 - Keyword, Category and name based search
 - Full functional Cart support for buyer 
 
+### API Structure
+![API Structure](./assets/api-structure) 
 ### Usage 🚀
 - Clone the repo, open it in your preferred code editor, and install all the dependencies using `npm install`.
 - Run `npm run dev` to start the development server.
